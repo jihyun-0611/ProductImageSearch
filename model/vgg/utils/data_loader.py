@@ -104,3 +104,5 @@ class ProductDataset(data.Dataset):
         img_transformed = self.transform(img, self.phase)  # torch.Size([3, 224, 224])
 
         return img_transformed, label
+
+
