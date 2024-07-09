@@ -47,23 +47,22 @@ class ImageTransform:
         return self.data_transform[phase](img)
 
 
-def create_data_path(phase="train"):
+def make_data_path():
     """
     make data path list
-    :param
-    phase: 'train' or 'val'
+
     :return:
     path_list: list
     """
-    root_path = './data/'
-    target_path = osp.join(root_path + phase + '/**/*.jpg')
+    root_path = 'C:\\workSpace\\codingAI\\ProductImageSearch\\model\\data\\myntradataset\\images\\'
+    ids_labels = np.load('C:\workSpace\codingAI\ProductImageSearch\model\data\myntradataset\id_label.npy', allow_pickle=True)
 
     path_list = []
     # glob -> load file path of sub directory
-    for path in glob.glob(target_path):
-        path_list.append(path)
+    for id in ids_labels[:,0]:
+        path_list.append(root_path + str(id) + '.jpg')
 
-    return path_list
+    return path_list, list(ids_labels)
 
 
 class ProductDataset(data.Dataset):
@@ -81,7 +80,7 @@ class ProductDataset(data.Dataset):
     """
 
     def __init__(self, file_list, transform=None, phase="train"):
-        self.file_list = file_list
+        self.file_list, self.labels = file_list
         self.transform = transform
         self.phase = phase
 
@@ -98,15 +97,10 @@ class ProductDataset(data.Dataset):
 
         # load image
         img_path = self.file_list[idx]
+        img_id, label = self.labels[idx]
         img = Image.open(img_path)
 
         # pre-processing image data
         img_transformed = self.transform(img, self.phase)  # torch.Size([3, 224, 224])
-
-        # get the image label from file path(name)
-        if "ants" in img_path:
-            label = 0
-        elif "bees" in img_path:
-            label = 1
 
         return img_transformed, label
