@@ -47,15 +47,15 @@ class ImageTransform:
         return self.data_transform[phase](img)
 
 
-def make_data_path():
+def make_data_path(root):
     """
     make data path list
 
     :return:
     path_list: list
     """
-    root_path = 'C:\\workSpace\\codingAI\\ProductImageSearch\\model\\data\\myntradataset\\images\\'
-    ids_labels = np.load('C:\workSpace\codingAI\ProductImageSearch\model\data\myntradataset\id_label.npy', allow_pickle=True)
+    root_path = root + 'images\\'
+    ids_labels = np.load(root + 'id_label.npy', allow_pickle=True)
 
     path_list = []
     # glob -> load file path of sub directory
